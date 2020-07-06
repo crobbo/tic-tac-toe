@@ -1,15 +1,29 @@
 class NewGame
 
-  attr_accessor :player1, :player2, :player1_counter, :player2_counter, :x_coordinate, :y_coordinate
+  attr_accessor :player1, :player2, :player1_counter, :player2_counter, :place_counter
   
   def initialize(player1, player2)
     @player1 = player1
     @player2 = player2
     @number_of_rounds = 0
     @game_over = false
-    @row1 = [nil, nil, nil]
-    @row2 = [nil, nil, nil]
-    @row3 = [nil, nil, nil]
+    # @row1 = [1, 2, 3]
+    # @row2 = [4, 5, 6]
+    # @row3 = [7, 8, 9]
+    @board = [
+      ["1", "2", "3"],
+      ["4", "5", "6"],
+      ["7", "8", "9"]
+    ]
+  end
+
+  def display
+    @board.each do |row|
+      row.each do |cell|
+        print cell + " "
+      end
+      print "\n"
+    end
   end
 
   def counter_choice
@@ -18,115 +32,106 @@ class NewGame
     else
       @player2_counter = 'X'
     end
-   
   end
 
   def counter_coordinates
-
     if number_of_rounds % 2 === 0
-      puts "#{player1} choose your X-coordinate..."
+      puts "#{player1}, select a number to place your counter..."
       x = gets.chomp.to_i
-      x_coordinate = x
-      puts "...and now your Y-coordiante"
-      y = gets.chomp.to_i
-      y_coordinate = y
-      place_counter(x_coordinate,y_coordinate)
+      place_counter = x
+      place_counter(place_counter)
     else
-      puts "#{player2} choose your X-coordinate..."
+      puts "#{player2}, select a number to place your counter..."
       x = gets.chomp.to_i
-      x_coordinate = x
-      puts "...and now your Y-coordiante"
-      y = gets.chomp.to_i
-      y_coordinate = y
-      place_counter(x_coordinate,y_coordinate)
+      place_counter = x
+      place_counter(place_counter)
     end
   end
 
-  def place_counter(x_coordinate, y_coordinate) 
-    
+  def place_counter(place_counter) 
     if number_of_rounds % 2 === 0
       counter = player2_counter
     else
       counter = player1_counter
     end
 
-    if x_coordinate == 1 && y_coordinate == 1
-      @row3[0] = counter
-    elsif x_coordinate == 2 && y_coordinate == 1
-      @row3[1] = counter
-    elsif x_coordinate == 3 && y_coordinate == 1
-      @row3[2] = counter
-    elsif x_coordinate == 1 && y_coordinate == 2
-      @row2[0] = counter
-    elsif x_coordinate == 2 && y_coordinate == 2
-      @row2[1] = counter
-    elsif x_coordinate == 3 && y_coordinate == 2
-      @row2[2] = counter
-    elsif x_coordinate == 1 && y_coordinate == 3
-      @row1[0] = counter
-    elsif x_coordinate == 2 && y_coordinate == 3
-      @row1[1] = counter
-    else x_coordinate == 3 && y_coordinate == 3
-      @row1[2] = counter
-    end  
+    if place_counter === 1
+      @board[0][0] = counter
+    elsif place_counter === 2
+      @board[0][1] = counter
+    elsif place_counter === 3
+      @board[0][2] = counter
+    elsif place_counter === 4
+      @board[1][0] = counter
+    elsif place_counter === 5
+      @board[1][1] = counter
+    elsif place_counter === 6
+      @board[1][2] = counter
+    elsif place_counter === 7
+      @board[2][0] = counter
+    elsif place_counter === 8
+      @board[2][1] = counter
+    else place_counter === 9
+      @board[2][2] = counter
+    end
   end
 
   def check_for_winner
-    if @row3[0] === @row3[1] && @row3[0] === @row3[2]
-      if @row3[0] === nil || @row3[1] === nil || @row3[2] === 0
+    if @board[2][0] === @board[2][1] && @board[2][0] === @board[2][2]
+      if @board[2][0] === nil || @board[2][1] === nil || @board[2][2] === 0
         return
       else
         @game_over = true
-        puts "Game over"
+        print_winner
+      end
+    elsif @board[1][0] === @board[1][1] && @board[1][0] === @board[1][2]
+      if @board[1][0] === nil || @board[1][1] === nil || @board[1][2] === nil
+        return
+      else
+        @game_over = true
+        print_winner
+      end
+    elsif @board[0][0] === @board[0][1] && @board[0][0] === @board[0][2]
+      if @board[0][0] === nil || @board[0][1] === nil || @board[0][2] === nil
+        return
+      else
+        @game_over = true
+        print_winner
+      end
+    elsif @board[0][0] === @board[1][0] && @board[0][0] === @board[2][0]
+      if @board[0][0] === nil || @board[1][0] === nil || @board[2][0] === nil
+        return
+      else
+        @game_over = true
+        print_winner
+      end
+    elsif @board[0][1] === @board[1][1] && @board[0][1] === @board[2][1]
+      if @board[0][1] === nil || @board[1][1] === nil || @board[2][1] === nil
+        return
+      else
+        @game_over = true
+        print_winner
+      end
+    elsif @board[0][2] === @board[1][2] && @board[0][2] === @board[2][2]
+      if @board[0][2] === nil || @board[1][2] === nil || @board[2][2] === nil
+        return
+      else
+        @game_over = true
+        print_winner
       end 
-    elsif @row2[0] === @row2[1] && @row2[0] === @row2[2]
-      if @row2[0] === nil || @row2[1] === nil || @row2[2] === nil
+    elsif @board[0][0] === @board[1][1] && @board[0][0] === @board[2][2]
+      if @board[0][0] === nil || @board[1][1] === nil || @board[2][2] === nil
         return
       else
         @game_over = true
-        puts "Game over"
+        print_winner
       end 
-    elsif @row1[0] === @row1[1] && @row1[0] === @row1[2]
-      if @row1[0] === nil || @row1[1] === nil || @row1[2] === nil
+    elsif @board[0][2] === @board[1][1] && @board[0][2] === @board[2][0]
+      if @board[0][2] === nil || @board[0][1] === nil || @board[2][0] === nil
         return
       else
         @game_over = true
-        puts "Game over"
-      end 
-    elsif @row1[0] === @row2[0] && @row1[0] === @row3[0]
-      if @row1[0] === nil || @row2[0] === nil || @row3[0] === nil
-        return
-      else
-        @game_over = true
-        puts "Game over"
-      end 
-    elsif @row1[1] === @row2[1] && @row1[1] === @row3[1]
-      if @row1[1] === nil || @row2[1] === nil || @row3[1] === nil
-        return
-      else
-        @game_over = true
-        puts "Game over"
-      end 
-    elsif @row1[2] === @row2[2] && @row1[2] === @row3[2]
-      if @row1[2] === nil || @row2[2] === nil || @row3[2] === nil
-        return
-      else
-        @game_over = true
-        puts "Game over"
-      end 
-    elsif @row1[0] === @row2[1] && @row1[0] === @row3[2]
-      if @row1[0] === nil || @row2[1] === nil || @row3[2] === nil
-        return
-      else
-        @game_over = true
-        puts "Game over"
-      end 
-    elsif @row1[2] === @row2[1] && @row1[2] === @row3[0]
-      if @row1[2] === nil || @row1[1] === nil || @row3[0] === nil
-        return
-      else
-        @game_over = true
-        puts "Game over"
+        print_winner 
       end 
     end
   end
@@ -135,16 +140,25 @@ class NewGame
     @game_over
   end
 
-  def print_board
-    puts "\n"
-    puts "\n"
-    p @row1
-    p @row2
-    p @row3
-  end
+  # def print_board
+  #   display
+  #   # puts "\n"
+  #   # puts "\n"
+  #   # p @row1
+  #   # p @row2
+  #   # p @row3
+  # end
 
   def number_of_rounds
     @number_of_rounds += 1
+  end
+
+  def print_winner 
+    if number_of_rounds % 2 === 0
+      puts "Game over, #{player1} wins!"
+    else
+      puts "Game over, #{player2} wins!"
+    end
   end
 
   require 'io/console'
